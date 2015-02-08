@@ -25,7 +25,7 @@
 // 
 // CODING RULES:
 // 
-  // Replace the "return" statement in each function with one
+//   Replace the "return" statement in each function with one
 //   or more lines of C code that implements the function. Your code
 //   must conform to the following style:
 // 
@@ -119,8 +119,7 @@
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  int result = ~x | ~y;
-  return ~result;
+  return 2;
 }
 /*
  * bitXor - x^y using only ~ and &
@@ -130,8 +129,7 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int bitXor(int x, int y) {
-  int result = ~(x & y) & ~(~x & ~y);
-  return result;
+  return 2;
 }
 /*
  * isEqual - return 1 if x == y, and 0 otherwise
@@ -141,8 +139,7 @@ int bitXor(int x, int y) {
  *   Rating: 2
  */
 int isEqual(int x, int y) {
-  int result = x^y;
-  return !result;
+  return 2;
 }
 /*
  * evenBits - return word with all even-numbered bits set to 1
@@ -151,15 +148,7 @@ int isEqual(int x, int y) {
  *   Rating: 2
  */
 int evenBits(void) {
-  int even_bits = 0x55;
-  int result = 0x00 | even_bits;
-  even_bits <<= 8;
-  result |= even_bits;
-  even_bits <<= 8;
-  result |= even_bits;
-  even_bits <<= 8;
-  result |= even_bits;
-  return result;
+  return 2;
 }
 /*
  * fitsBits - return 1 if x can be represented as an
@@ -171,9 +160,7 @@ int evenBits(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  int mask = x >> 31;
-
-  return !(((~x & mask) + (x & ~mask)) >> (n + ~0));
+  return 2;
 }
 /*
  * bitMask - Generate a mask consisting of all 1's
@@ -186,10 +173,7 @@ int fitsBits(int x, int n) {
  *   Rating: 3
  */
 int bitMask(int highbit, int lowbit) {
-  int high_mask = ~0x01 << highbit;
-  int low_mask = ~(~0x00 << lowbit);
-  int mask = ~(high_mask | low_mask);   // complement of high and low
-  return mask;
+  return 2;
 }
 /*
  * conditional - same as x ? y : z
@@ -199,15 +183,7 @@ int bitMask(int highbit, int lowbit) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  int not_zero = !!(x^0x00);
-
-  int is_true = ((not_zero << 31) >> 31) & y;
-  int is_false = ((!not_zero << 31) >> 31) & z;
-
-
-  int result = is_true | is_false;
-
-  return result;
+  return 2;
 }
 /*
  * reverseBytes - reverse the bytes of x
@@ -217,15 +193,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int reverseBytes(int x) {
-  int mask = 0xFF;
-
-  int byte_4 = (x << 24) & mask << 24;
-  int byte_3 = (x << 8) & mask << 16;
-  int byte_2 = (x >> 8) & mask << 8;
-  int byte_1 = (x >> 24) & mask;
-
-  int result = byte_4 | byte_3 | byte_2 | byte_1;
-  return result;
+  return 2;
 }
 /*
  * bang - Compute !x without using !
