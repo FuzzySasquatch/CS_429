@@ -78,9 +78,51 @@ int reverseBytes(int x) {
   return result;
 }
 
+int bang(int x) {
+  return ;
+}
+
+int bitCount(int x) {
+  int count = 0;
+  // count+= x & 1;
+  // count+= x >> 1 & 1;
+  // count+= x >> 2 & 1;
+  // count+= x >> 3 & 1;
+  // count+= x >> 4 & 1;
+  // count+= x >> 5 & 1;
+  // count+= x >> 6 & 1;
+  // count+= x >> 7 & 1;
+  // count+= x >> 8 & 1;
+  // count+= x >> 9 & 1;
+  // count+= x >> 10 & 1;
+  // count+= x >> 11 & 1;
+  // count+= x >> 12 & 1;
+  // count+= x >> 13 & 1;
+  // count+= x >> 14 & 1;
+  // count+= x >> 15 & 1;
+  // count+= x >> 16 & 1;
+  // count+= x >> 17 & 1;
+  // count+= x >> 18 & 1;
+  // count+= x >> 19 & 1;
+  // count+= x >> 20 & 1;
+  // count+= x >> 21 & 1;
+  // count+= x >> 22 & 1;
+  // count+= x >> 23 & 1;
+  // count+= x >> 24 & 1;
+  // count+= x >> 25 & 1;
+  // count+= x >> 26 & 1;
+  // count+= x >> 27 & 1;
+  // count+= x >> 28 & 1;
+  // count+= x >> 29 & 1;
+  // count+= x >> 30 & 1;
+  // count+= x >> 31 & 1;
+  return count;
+}
+
 int main () {
 	// printf("0x%X\n", bitMask(5,3));
 	// printf("fitsBits = %d\n",fitsBits(1,1));
 	// printf("%d\n", conditional(1, 4, 5));
-	printf("0x%X\n", reverseBytes(0x01020304));
+	// printf("0x%X\n", reverseBytes(0x01020304));
+	printf("%d\n", bitCount(5));
 }

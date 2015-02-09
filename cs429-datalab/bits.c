@@ -235,7 +235,15 @@ int reverseBytes(int x) {
  *   Rating: 4
  */
 int bang(int x) {
-  return 2;
+  x |= x >> 16;
+  x |= x >> 8;
+  x |= x >> 4;
+  x |= x >> 2;
+  x |= x >> 1;
+
+  return ~x & 0x01;
+  // int result = ~x & 0x01;
+  // return result;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -245,7 +253,42 @@ int bang(int x) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  return 2;
+  int count = 0;
+
+  count+= x & 1;
+  count+= x >> 1 & 1;
+  count+= x >> 2 & 1;
+  count+= x >> 3 & 1;
+  count+= x >> 4 & 1;
+  count+= x >> 5 & 1;
+  count+= x >> 6 & 1;
+  count+= x >> 7 & 1;
+  count+= x >> 8 & 1;
+  count+= x >> 9 & 1;
+  count+= x >> 10 & 1;
+  count+= x >> 11 & 1;
+  count+= x >> 12 & 1;
+  count+= x >> 13 & 1;
+  count+= x >> 14 & 1;
+  count+= x >> 15 & 1;
+  count+= x >> 16 & 1;
+  count+= x >> 17 & 1;
+  count+= x >> 18 & 1;
+  count+= x >> 19 & 1;
+  count+= x >> 20 & 1;
+  count+= x >> 21 & 1;
+  count+= x >> 22 & 1;
+  count+= x >> 23 & 1;
+  count+= x >> 24 & 1;
+  count+= x >> 25 & 1;
+  count+= x >> 26 & 1;
+  count+= x >> 27 & 1;
+  count+= x >> 28 & 1;
+  count+= x >> 29 & 1;
+  count+= x >> 30 & 1;
+  count+= x >> 31 & 1;
+
+  return count;
 }
 /*
  * isZero - returns 1 if x == 0, and 0 otherwise
@@ -255,7 +298,7 @@ int bitCount(int x) {
  *   Rating: 1
  */
 int isZero(int x) {
-  return 2;
+  return !(x^0x00);
 }
 /*
  * isNegative - return 1 if x < 0, return 0 otherwise
@@ -297,8 +340,8 @@ int sum3(int x, int y, int z) {
      Fill in code below that computes values for word1 and word2
      (note that the + operation is not allowed here!)
   ***************************************************************/
-  int foo = 1;
-  int bar = 1;
+  int foo = x^y;
+  int bar = z;
   word1 = foo;
   word2 = bar;
   /**************************************************************
@@ -346,7 +389,14 @@ int abs(int x) {
  *   Rating: 4
  */
 int isNonZero(int x) {
-  return 2;
+  x |= x >> 16;
+  x |= x >> 8;
+  x |= x >> 4;
+  x |= x >> 2;
+  x |= x >> 1;
+  
+  return x & 0x01;
+  // return 2;
 }
 /*
  * tc2sm - Convert from two's complement to sign-magnitude
