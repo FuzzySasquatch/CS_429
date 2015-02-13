@@ -83,7 +83,7 @@ int bang(int x) {
 }
 
 int bitCount(int x) {
-  int count = 0;
+  // int count = 0;
   // count+= x & 1;
   // count+= x >> 1 & 1;
   // count+= x >> 2 & 1;
@@ -116,7 +116,68 @@ int bitCount(int x) {
   // count+= x >> 29 & 1;
   // count+= x >> 30 & 1;
   // count+= x >> 31 & 1;
-  return count;
+
+  int m1 = 0x55;                
+  m1 = (m1 <<  8) | m1;     
+  m1 = (m1 << 16) | m1;
+
+  int m2 = 0x33;
+  m2 = (m2 <<  8) | m2;     
+  m2 = (m2 << 16) | m2;
+
+  int m4 = 0x0F;
+  m4 = (m4 <<  8) | m4;     
+  m4 = (m4 << 16) | m4;
+
+  int m8 = 0xFF | 0xFF << 16;
+
+  int m16 = 0xFF;
+  m16 = (m16 << 8) | m16;
+
+  x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits 
+  x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits 
+  x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits 
+  x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits 
+  x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits
+
+
+  // int fives = 0x55;                
+  // fives = (fives <<  8) | fives;     
+  // fives = (fives << 16) | fives;
+  // int threes = 0x33;
+  // threes = (threes <<  8) | threes;     
+  // threes = (threes << 16) | threes;
+  // int zero_f = 0x0F;
+  // zero_f = (zero_f <<  8) | zero_f;     
+  // zero_f = (zero_f << 16) | zero_f;
+  // int front_f = 0xFF;
+  // int mid_f = front_f << 16;
+  // front_f = (front_f << 4) | front_f;
+
+
+  // count = (x & fives) + ((x >> 1) & fives);
+  // count = (count & threes) + ((count >> 2) & threes);
+  // count = (count & zero_f) + ((count >> 4) & zero_f);
+  // count = (count & mid_f) + ((count >> 8) & mid_f);
+  // count = (count & front_f) + ((count >> 16) & front_f);
+
+  return x;
+}
+
+/*
+ * addOK - Determine if can compute x+y without overflow
+ *   Example: addOK(0x80000000,0x80000000) = 0,
+ *            addOK(0x80000000,0x70000000) = 1,
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 20
+ *   Rating: 3
+ */
+int addOK(int x, int y) {
+  int sum = x + y;
+  printf("%d\n", sum);
+  int neg_overflow = ((x >> 31) & 1) & ((y >> 31) & 1) & !((sum >> 31) & 1);
+  int pos_overflow = !((x >> 31) & 1) & !((y >> 31) & 1) & ((sum >> 31) & 1);
+  return !neg_overflow & !pos_overflow;
 }
 
 int main () {
@@ -124,5 +185,5 @@ int main () {
 	// printf("fitsBits = %d\n",fitsBits(1,1));
 	// printf("%d\n", conditional(1, 4, 5));
 	// printf("0x%X\n", reverseBytes(0x01020304));
-	printf("%d\n", bitCount(5));
+	printf("%X\n", addOK(0x80000000, 0x80000000));
 }

@@ -253,42 +253,33 @@ int bang(int x) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  int count = 0;
 
-  count+= x & 1;
-  count+= x >> 1 & 1;
-  count+= x >> 2 & 1;
-  count+= x >> 3 & 1;
-  count+= x >> 4 & 1;
-  count+= x >> 5 & 1;
-  count+= x >> 6 & 1;
-  count+= x >> 7 & 1;
-  count+= x >> 8 & 1;
-  count+= x >> 9 & 1;
-  count+= x >> 10 & 1;
-  count+= x >> 11 & 1;
-  count+= x >> 12 & 1;
-  count+= x >> 13 & 1;
-  count+= x >> 14 & 1;
-  count+= x >> 15 & 1;
-  count+= x >> 16 & 1;
-  count+= x >> 17 & 1;
-  count+= x >> 18 & 1;
-  count+= x >> 19 & 1;
-  count+= x >> 20 & 1;
-  count+= x >> 21 & 1;
-  count+= x >> 22 & 1;
-  count+= x >> 23 & 1;
-  count+= x >> 24 & 1;
-  count+= x >> 25 & 1;
-  count+= x >> 26 & 1;
-  count+= x >> 27 & 1;
-  count+= x >> 28 & 1;
-  count+= x >> 29 & 1;
-  count+= x >> 30 & 1;
-  count+= x >> 31 & 1;
+  int m1 = 0x55;  
+  int m2 = 0x33;
+  int m4 = 0x0F;
+  int m8 = 0xFF;  
+  int m16 = 0xFF;
 
-  return count;
+  m1 = (m1 <<  8) | m1;     
+  m1 = (m1 << 16) | m1;
+  
+  m2 = (m2 <<  8) | m2;     
+  m2 = (m2 << 16) | m2;
+  
+  m4 = (m4 <<  8) | m4;     
+  m4 = (m4 << 16) | m4;
+  
+  m8 = (0xFF << 16) | m8;
+
+  m16 = (m16 << 8) | m16;
+  
+  x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits 
+  x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits 
+  x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits 
+  x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits 
+  x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits
+
+  return x;
 }
 /*
  * isZero - returns 1 if x == 0, and 0 otherwise
@@ -308,7 +299,7 @@ int isZero(int x) {
  *   Rating: 3
  */
 int isNegative(int x) {
-  return 2;
+  return (x >> 31) & 1;
 }
 /*
  * multFiveEights - multiplies by 5/8 rounding toward 0.
@@ -358,7 +349,13 @@ int sum3(int x, int y, int z) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-  return 2;
+  int sum = x + y;
+  int x_less_zero = ((x >> 31) & 1);
+  int y_less_zero = ((y >> 31) & 1);
+  int sum_less_zero = ((sum >> 31) & 1);
+  int neg_overflow = x_less_zero & y_less_zero & !sum_less_zero;
+  int pos_overflow = !x_less_zero & !y_less_zero & sum_less_zero;
+  return !neg_overflow & !pos_overflow;
 }
 /*
  * isLess - if x < y  then return 1, else return 0
