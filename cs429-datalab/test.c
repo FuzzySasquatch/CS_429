@@ -225,14 +225,40 @@ int ab(int x) {
   return x_neg & (~x + 1);
 }
 
+/*
+ * multFiveEights - multiplies by 5/8 rounding toward 0.
+ *   Examples: multFiveEights(77) = 48
+ *             multFiveEights(-22) = -13
+ *   You can assume |x| < (1 << 29)
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 12
+ *   Rating: 3
+ */
+int multFiveEights(int num) {
+  int s = -((num >> 31) & 1); // sign bit as -1 or 0
+
+  int n = (num ^ s) - s; // twos complement if negative
+
+  int x = n >> 3; // divide by 8
+
+  x = (x << 2) + x;   // multiply by 5; no overflow yet since 5/8 is less than one
+
+  int y = n & 7;  // the bits we shifted out
+
+  y = (y << 2) + y;   // multiply by 5; no overflow
+
+  return (s ^ (x + (y >> 3))) - s; // the two pieces and complemented back
+}
+
 int main () {
   // printf("%d\n", ~5 + 1);
 	// printf("0x%X\n", bitMask(5,3));
 	// printf("fitsBits = %d\n",fitsBits(1,1));
 	// printf("%d\n", conditional(1, 4, 5));
 	// printf("0x%X\n", reverseBytes(0x01020304));
-
-  printf("%d\n", ab(-3));
+  printf("%d\n", multFiveEights(77));
+  printf("%d\n", ~0);
+  // printf("%d\n", ab(-3));
 	// printf("%X\n", addOK(0x80000000, 0x80000000));
   return 0;
 }

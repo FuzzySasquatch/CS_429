@@ -119,6 +119,7 @@
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
+  /* definition of Demorgan's using ~'s & |'s */
   int result = ~x | ~y;
   return ~result;
 }
@@ -130,6 +131,7 @@ int bitAnd(int x, int y) {
  *   Rating: 2
  */
 int bitXor(int x, int y) {
+  /* definiton of XOR */
   int result = ~(x & y) & ~(~x & ~y);
   return result;
 }
@@ -141,6 +143,8 @@ int bitXor(int x, int y) {
  *   Rating: 2
  */
 int isEqual(int x, int y) {
+  /* If the XOR'd bits are the same they will produce 0x0.
+     !ing this leaves 0x1 */
   int result = x^y;
   return !result;
 }
@@ -151,6 +155,7 @@ int isEqual(int x, int y) {
  *   Rating: 2
  */
 int evenBits(void) {
+  /* Creates an even byte mask, 0x55, checking each byte in 32 bits */
   int even_bits = 0x55;
   int result = 0x00 | even_bits;
   even_bits <<= 8;
@@ -171,6 +176,7 @@ int evenBits(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
+  /* Masks the signed bit to get the most significant bit, then shifts right n - 1 and ! the solution */
   int mask = x >> 31;
 
   return !(((~x & mask) + (x & ~mask)) >> (n + ~0));
@@ -186,6 +192,7 @@ int fitsBits(int x, int n) {
  *   Rating: 3
  */
 int bitMask(int highbit, int lowbit) {
+  /* high masks above highbit, low masks below lowbit and the complement of the | of the two leaves the answer */
   int high_mask = ~0x01 << highbit;
   int low_mask = ~(~0x00 << lowbit);
   int mask = ~(high_mask | low_mask);   // complement of high and low
@@ -199,6 +206,7 @@ int bitMask(int highbit, int lowbit) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
+  /*If x is not_zero, or true, y is returned, else z is returned */
   int not_zero = !!(x^0x00);
 
   int is_true = ((not_zero << 31) >> 31) & y;
@@ -217,6 +225,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int reverseBytes(int x) {
+  /* Stores each byte and |'s them back together in reverse order */
   int mask = 0xFF;
 
   int byte_4 = (x << 24) & mask << 24;
@@ -235,6 +244,8 @@ int reverseBytes(int x) {
  *   Rating: 4
  */
 int bang(int x) {
+  /* Uses a technique known as 'bitsmearing' to create 1's to the right of the leftmost bit.
+     ~ing x and &ing 1 produces the result */
   x |= x >> 16;
   x |= x >> 8;
   x |= x >> 4;
@@ -242,8 +253,6 @@ int bang(int x) {
   x |= x >> 1;
 
   return ~x & 0x01;
-  // int result = ~x & 0x01;
-  // return result;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -253,7 +262,7 @@ int bang(int x) {
  *   Rating: 4
  */
 int bitCount(int x) {
-
+  /* Uses a technique known as 'hamming weight' to count bits simultaneously */
   int m1 = 0x55;  
   int m2 = 0x33;
   int m4 = 0x0F;
@@ -273,11 +282,11 @@ int bitCount(int x) {
 
   m16 = (m16 << 8) | m16;
   
-  x = (x & m1 ) + ((x >>  1) & m1 ); //put count of each  2 bits into those  2 bits 
-  x = (x & m2 ) + ((x >>  2) & m2 ); //put count of each  4 bits into those  4 bits 
-  x = (x & m4 ) + ((x >>  4) & m4 ); //put count of each  8 bits into those  8 bits 
-  x = (x & m8 ) + ((x >>  8) & m8 ); //put count of each 16 bits into those 16 bits 
-  x = (x & m16) + ((x >> 16) & m16); //put count of each 32 bits into those 32 bits
+  x = (x & m1 ) + ((x >>  1) & m1 ); // put count of each  2 bits into those  2 bits 
+  x = (x & m2 ) + ((x >>  2) & m2 ); // put count of each  4 bits into those  4 bits 
+  x = (x & m4 ) + ((x >>  4) & m4 ); // put count of each  8 bits into those  8 bits 
+  x = (x & m8 ) + ((x >>  8) & m8 ); // put count of each 16 bits into those 16 bits 
+  x = (x & m16) + ((x >> 16) & m16); // put count of each 32 bits into those 32 bits
 
   return x;
 }
@@ -289,6 +298,7 @@ int bitCount(int x) {
  *   Rating: 1
  */
 int isZero(int x) {
+  /* Uses the isEqual method to test x for equality with 0 */
   return !(x^0x00);
 }
 /*
@@ -299,6 +309,7 @@ int isZero(int x) {
  *   Rating: 3
  */
 int isNegative(int x) {
+  /* Obtains the leftmost bit, or the sign bit */
   return (x >> 31) & 1;
 }
 /*
@@ -311,7 +322,18 @@ int isNegative(int x) {
  *   Rating: 3
  */
 int multFiveEights(int x) {
-  return 2;
+  /* Grab the signed bit. XOR it with x and add the opposite of the signed bit.
+     Divide the result by 8 by capitalizing on shift operators. & the result with
+     0111. Multiply by 5 using shift operators plus the prestanding results. Put
+     it all together */
+  int sign = ~((x >> 31) & 1) + 1;
+  int op_sign = ~sign + 1;
+  int n = (x ^ sign) + op_sign;
+  int z = n >> 3; 
+  int y = n & 7;  
+  z = (z << 2) + z;
+  y = (y << 2) + y;
+  return (sign ^ (z + (y >> 3))) + op_sign;
 }
 /*
  * sum3 - x+y+z using only a single '+'
@@ -325,14 +347,15 @@ static int sum(int x, int y) {
   return x+y;
 }
 int sum3(int x, int y, int z) {
+/* XORs x and y then z to obtain one part of the equation and stores the carry bit in word2 */ 
   int word1;
   int word2;
   /**************************************************************
      Fill in code below that computes values for word1 and word2
      (note that the + operation is not allowed here!)
   ***************************************************************/
-  int foo = x^y;
-  int bar = z;
+  int foo = (x ^ y) ^ z;
+  int bar = ((x & y) | (x & z) | (y & z)) << 1;
   word1 = foo;
   word2 = bar;
   /**************************************************************
@@ -349,6 +372,7 @@ int sum3(int x, int y, int z) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
+  /* Accounts for several cases overflow cases using the sign bit */
   int sum = x + y;
   int x_less_zero = ((x >> 31) & 1);
   int y_less_zero = ((y >> 31) & 1);
@@ -365,7 +389,7 @@ int addOK(int x, int y) {
  *   Rating: 3
  */
 int isLess(int x, int y) {
-
+  /* Accounts for several cases in which x is less than y through use of the sign bit */
   int x_neg = (x >> 31) & 1;
   int y_neg = (y >> 31) & 1;
   
@@ -389,6 +413,8 @@ int isLess(int x, int y) {
  *   Rating: 4
  */
 int abs(int x) {
+  /* Retrieves the sign bit, XORs it with x and adds the opposite.
+     This will have no effect on a nonnegative number */
   int mask = x >> 31;
   int result = (x ^ mask) + (~mask + 1);
   return result;
@@ -402,14 +428,10 @@ int abs(int x) {
  *   Rating: 4
  */
 int isNonZero(int x) {
-  x |= x >> 16;
-  x |= x >> 8;
-  x |= x >> 4;
-  x |= x >> 2;
-  x |= x >> 1;
-  
-  return x & 0x01;
-  // return 2;
+  /* Tests to see if x is positive or negative. If so it is nonzero else it is zero */
+  int is_pos = ((~x + 1) >> 31);
+  int is_neg = (x >> 31);
+  return (is_pos | is_neg) & 1;
 }
 /*
  * tc2sm - Convert from two's complement to sign-magnitude
@@ -421,6 +443,7 @@ int isNonZero(int x) {
  *   Rating: 4
  */
 int tc2sm(int x) {
+  /* Takes the abs value of x and applies the sign bit back */
   int mask = x >> 31;
   int result = (x ^ mask) + (~mask + 1);
   return result | (mask << 31);
