@@ -174,16 +174,65 @@ int bitCount(int x) {
  */
 int addOK(int x, int y) {
   int sum = x + y;
-  printf("%d\n", sum);
   int neg_overflow = ((x >> 31) & 1) & ((y >> 31) & 1) & !((sum >> 31) & 1);
   int pos_overflow = !((x >> 31) & 1) & !((y >> 31) & 1) & ((sum >> 31) & 1);
   return !neg_overflow & !pos_overflow;
 }
 
+int isLess(int x, int y) {
+  // int difference = x + (~y + 1);
+
+
+  // int is_less = (difference >> 31) & 1;
+  // printf("%d\n", difference);
+  // printf("%X\n", is_less);
+
+  int x_neg = (x >> 31) & 1;
+  int y_neg = (y >> 31) & 1;
+  
+  int x_pos = !x_neg;
+  int y_pos = !y_neg;
+  
+  int not_equal = !!(x^y);
+
+
+
+  int difference = ((x + (~y + 1)) >> 31) & 1;
+
+
+
+  int x_less_pos = x_pos & y_pos & difference;
+  int x_less_neg = x_neg & y_neg & difference;
+  int x_neg_y_pos = x_neg & y_pos;
+
+
+  // int difference = x + (~y + 1);
+  // int is_less = (difference >> 31) & 1;
+  return x_less_pos | x_less_neg | x_neg_y_pos & not_equal;
+  
+}
+
+/*
+ * abs - absolute value of x (except returns TMin for TMin)
+ *   Example: abs(-1) = 1.
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 10
+ *   Rating: 4
+ */
+int ab(int x) {
+  int x_neg = (x >> 31) & 1;
+   printf("%d\n", x_neg);
+  return x_neg & (~x + 1);
+}
+
 int main () {
+  // printf("%d\n", ~5 + 1);
 	// printf("0x%X\n", bitMask(5,3));
 	// printf("fitsBits = %d\n",fitsBits(1,1));
 	// printf("%d\n", conditional(1, 4, 5));
 	// printf("0x%X\n", reverseBytes(0x01020304));
-	printf("%X\n", addOK(0x80000000, 0x80000000));
+
+  printf("%d\n", ab(-3));
+	// printf("%X\n", addOK(0x80000000, 0x80000000));
+  return 0;
 }

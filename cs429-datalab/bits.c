@@ -365,7 +365,21 @@ int addOK(int x, int y) {
  *   Rating: 3
  */
 int isLess(int x, int y) {
-  return 2;
+
+  int x_neg = (x >> 31) & 1;
+  int y_neg = (y >> 31) & 1;
+  
+  int x_pos = !x_neg;
+  int y_pos = !y_neg;
+  
+  int not_equal = !!(x^y);
+  int difference = ((x + (~y + 1)) >> 31) & 1;
+
+  int x_less_pos = x_pos & y_pos & difference;
+  int x_less_neg = x_neg & y_neg & difference;
+  int x_neg_y_pos = x_neg & y_pos;
+
+  return (x_less_pos | x_less_neg | x_neg_y_pos) & not_equal;
 }
 /*
  * abs - absolute value of x (except returns TMin for TMin)
@@ -375,7 +389,9 @@ int isLess(int x, int y) {
  *   Rating: 4
  */
 int abs(int x) {
-  return 2;
+  int mask = x >> 31;
+  int result = (x ^ mask) + (~mask + 1);
+  return result;
 }
 /*
  * isNonZero - Check whether x is nonzero using
@@ -405,5 +421,7 @@ int isNonZero(int x) {
  *   Rating: 4
  */
 int tc2sm(int x) {
-  return 2;
+  int mask = x >> 31;
+  int result = (x ^ mask) + (~mask + 1);
+  return result | (mask << 31);
 }
