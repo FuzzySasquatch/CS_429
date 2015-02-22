@@ -1,0 +1,80 @@
+# Name: Phoenix Bishea
+# Eid: pnb338
+
+# Execution begins at address 0
+		.pos 0
+init: 	
+		irmovl Stack, %esp		# Set up stack pointer
+		irmovl Stack, %ebp		# Set up base pointer
+		call Main				# Exectue main program
+		halt					# Terminate program
+
+.align 4
+# Source block
+src:
+    .long 0x00a
+    .long 0x0b0
+    .long 0xc00
+# Destination block
+dest:
+    .long 0x111
+    .long 0x222
+    .long 0x333
+
+Main:
+		pushl %ebp					# set up stackframe
+		rrmovl %esp, %ebp
+
+		pushl %ebx				# callee responsiblilty to save these regs
+		pushl %edi
+		pushl %esi
+
+		irmovl src, %ebx		# ebx = src
+		irmovl dest, %edi		# edi = dest
+		
+		irmovl dest, %esi       
+		subl %ebx, %esi			# esi = len = esi - ebx
+
+		call copy_block         #  copy_block(%ebx, %edi, %esi)
+
+		popl %ebx				# callee register popping
+        popl %esi
+        popl %edi
+
+		rrmovl %ebp, %esp
+		popl %ebp
+		ret		
+
+copy_block:
+		pushl %ebp
+		rrmovl %esp, %ebp 		# set up stackframe
+        
+        
+        xorl %eax, %eax			# result = 0
+        andl %esi, %esi			# set condition codes
+        je		End
+Loop:
+		
+		mrmovl (%ebx), %ecx     
+		rmmovl %ecx, (%edi) 	# *dest++ = val;
+		
+		mrmovl (%edi), %ecx
+		xorl %ecx, %eax 		# result ^= val;
+		
+		irmovl $4, %ecx 		# ecx = 4
+		addl %ecx, %ebx			# int val = *src++;
+		addl %ecx, %edi 		# 
+		
+		irmovl $4, %ecx 		# ecx = -1
+		subl %ecx, %esi			# len--
+		jne		Loop			# stop when 0
+    		
+				
+End:
+
+		rrmovl %ebp, %esp
+		popl %ebp
+		ret
+
+		.pos 0x1000
+Stack:
