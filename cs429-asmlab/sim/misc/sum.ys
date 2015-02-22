@@ -1,0 +1,71 @@
+# Name: Phoenix Bishea
+# Eid: pnb338
+
+# Execution begins at address 0
+		.pos 0
+init: 	
+		irmovl Stack, %esp		# Set up stack pointer
+		irmovl Stack, %ebp		# Set up base pointer
+		call Main				# Exectue main program
+		halt					# Terminate program
+
+		.align 4
+input_data:
+		ele1:
+		    	.long 0x00a
+		    	.long ele2
+		ele2:
+		    	.long 0x0b0
+		    	.long ele3
+		ele3:
+		    	.long 0xc00
+		    	.long 0
+
+Main:
+		pushl %ebp					# Set up stack and base pointer
+		rrmovl %esp, %ebp
+
+		irmovl input_data, %eax		# eax = input_data
+		pushl %eax					# push input_data onto the stack
+		call Sum					# sum_list(input_data)
+		rrmovl %ebp, %esp
+		popl %ebp
+		ret		
+
+Sum:
+		pushl %ebp
+		rrmovl %esp, %ebp 		# set up stackframe
+
+		pushl %ebx				# callee responsibility to save these registers
+		pushl %esi
+		pushl %edi
+		
+		mrmovl 8(%ebp), %ecx	# ecx = input_data
+		xorl %eax, %eax			# val = 0
+		mrmovl (%ecx), %edx		# edx = first value in input_data
+		andl %edx, %edx			# Set condition codes
+		je	End
+Loop:
+		mrmovl (%ecx), %esi		# get *input_data
+		addl %esi, %eax			# add to val
+
+		irmovl $4, %ebx			
+		addl %ebx, %ecx 		# move to next element
+
+		mrmovl (%ecx), %edi 	# edi = next element
+	    andl %edi, %edi 		#
+		mrmovl (%ecx), %ecx     # get what the current element is pointing to 
+		jne Loop				# stop when 0
+End:
+
+        popl %ebx				# callee register popping
+        popl %esi
+        popl %edi
+
+		rrmovl %ebp, %esp		# deconstruct stackframe
+		popl %ebp
+		ret 					# return to main
+
+# The stack starts here and grows to lower addresses
+		.pos 0x1000				
+Stack:

@@ -1,0 +1,68 @@
+# Name: Phoenix Bishea
+# Eid: pnb338
+
+# Execution begins at address 0
+		.pos 0
+init: 	
+		irmovl Stack, %esp		# Set up stack pointer
+		irmovl Stack, %ebp		# Set up base pointer
+		call Main				# Exectue main program
+		halt					# Terminate program
+
+		.align 4
+input_data:
+		ele1:
+		    	.long 0x00a
+		    	.long ele2
+		ele2:
+		    	.long 0x0b0
+		    	.long ele3
+		ele3:
+		    	.long 0xc00
+		    	.long 0
+
+Main:
+		pushl %ebp					# set up stackframe
+		rrmovl %esp, %ebp
+
+		pushl %ebx				# callee responsiblilty to save these regs
+		pushl %edi
+		pushl %esi
+
+		irmovl input_data, %ecx		# eax = input_data
+		call rSum
+
+		popl %ebx				# callee register popping
+        popl %esi
+        popl %edi
+
+		rrmovl %ebp, %esp
+		popl %ebp
+		ret		
+
+rSum:
+		pushl %ebp
+		rrmovl %esp, %ebp 		# set up stackframe
+
+		xorl %eax, %eax			# return val = 0
+		andl %ecx, %ecx 		# check if ecx is 0
+		je 		End
+        
+        mrmovl (%ecx), %esi 	# val = *input_data	
+		pushl %esi 				# push val on the stack
+
+		irmovl $4, %ebx			
+		addl %ebx, %ecx 		
+		mrmovl (%ecx), %ecx 	# ecx = input_data->next
+
+		call rSum		
+End:
+        mrmovl 8(%ebp), %esi
+		addl %esi, %eax
+
+		rrmovl %ebp, %esp
+		popl %ebp
+		ret
+
+		.pos 0x1000
+Stack:
