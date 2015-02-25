@@ -35,11 +35,11 @@ Main:
 		irmovl dest, %esi       
 		subl %ebx, %esi			# esi = len = esi - ebx
 
-		call copy_block         #  copy_block(%ebx, %edi, %esi)
+		call copy_block         # copy_block(ebx, edi, esi)
 
-		popl %ebx				# callee register popping
-        popl %esi
+		popl %esi				# callee register popping
         popl %edi
+        popl %ebx
 
 		rrmovl %ebp, %esp		# deconstruct stackframe
 		popl %ebp

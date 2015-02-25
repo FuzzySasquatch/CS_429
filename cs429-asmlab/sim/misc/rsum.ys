@@ -26,15 +26,13 @@ Main:
 		rrmovl %esp, %ebp
 
 		pushl %ebx					# callee responsiblilty to save these regs
-		# pushl %edi
 		pushl %esi
 
 		irmovl input_data, %ecx		# ecx = input_data
 		call rsum_list
 
-		popl %ebx					# callee register popping
-        popl %esi
-        # popl %edi
+		popl %esi					# callee register popping
+        popl %ebx
 
 		rrmovl %ebp, %esp 			# deconstruct stackframe
 		popl %ebp

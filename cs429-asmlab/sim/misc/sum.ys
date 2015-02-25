@@ -58,9 +58,9 @@ Loop:
 		mrmovl (%ecx), %ecx     # get what the current element is pointing to 
 		jne Loop				# stop when 0
 End:
-        popl %ebx				# callee register popping
+        popl %edi				# callee register popping
         popl %esi
-        popl %edi
+        popl %ebx
 
 		rrmovl %ebp, %esp		# deconstruct stackframe
 		popl %ebp
